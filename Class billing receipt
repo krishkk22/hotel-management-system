@@ -1,0 +1,11 @@
+class BillingReceipt {
+    int receiptCode;
+    int tableID;
+    double totalAmount;
+
+    public BillingReceipt(int receiptCode, int tableID, double totalAmount) {
+        this.receiptCode = receiptCode;
+        this.tableID = tableID;
+        this.totalAmount = totalAmount;
+    }
+}
