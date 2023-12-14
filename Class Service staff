@@ -1,0 +1,38 @@
+class ServiceStaff {
+    public void takeOrder(ReservationRecord reservation, FoodMenu menu) {
+        int orderCode = reservation.reservationCode;
+        CustomerOrder order = new CustomerOrder(orderCode, reservation.tableID, getOrderItems(menu));
+        System.out.println("Service staff takes order for Table " + order.tableID);
+
+        deliverOrderToKitchen(order);
+    }
+
+    private void deliverOrderToKitchen(CustomerOrder order) {
+        KitchenChef chef = new KitchenChef();
+        chef.prepareOrder(order);
+    }
+
+    private List<String> getOrderItems(FoodMenu menu) {
+        Scanner scanner = new Scanner(System.in);
+        List<String> orderedItems = new ArrayList<>();
+
+        menu.printMenu(); // Print the menu only once
+
+        while (true) {
+            System.out.print("Enter item to order (or 'done' to finish): ");
+            String input = scanner.nextLine().trim();
+
+            if (input.equalsIgnoreCase("done")) {
+                break;
+            }
+
+            if (menu.dishes.containsKey(input)) {
+                orderedItems.add(input);
+            } else {
+                System.out.println("Invalid item. Please choose from the menu.");
+            }
+        }
+
+        return orderedItems;
+    }
+}
