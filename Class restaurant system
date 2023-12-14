@@ -1,0 +1,23 @@
+class RestaurantSystem {
+    public static void main(String[] args) {
+        DiningTable diningTable = reserveTable();
+        ReservationRecord reservationRecord = new ReservationRecord(1, diningTable.tableID);
+
+        ServiceStaff staff = new ServiceStaff();
+        staff.takeOrder(reservationRecord, new FoodMenu());
+
+        // Simulate the passage of time for order preparation
+
+        Client client = new Client();
+        BillingReceipt receipt = generateReceipt(reservationRecord);
+        client.receiveReceipt(receipt);
+    }
+
+    private static DiningTable reserveTable() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter table ID: ");
+        int tableID = scanner.nextInt();
+
+        return new DiningTable(tableID);
+    }
