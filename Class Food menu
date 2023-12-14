@@ -1,0 +1,21 @@
+class FoodMenu {
+    Map<String, Double> dishes;
+
+    public FoodMenu() {
+        dishes = new HashMap<>();
+        dishes.put("Butter_Chicken", 20.99);
+        dishes.put("Dal_Makhani", 15.99);
+        dishes.put("Jeera_Rice", 16.99);
+        dishes.put("Naan", 4.99);
+        dishes.put("Ice_Cream", 7.99);
+
+        // Add more items as necessary
+    }
+
+    public void printMenu() {
+        System.out.println("Menu:");
+        for (String dish : dishes.keySet()) {
+            System.out.println(dish + " - $" + dishes.get(dish));
+        }
+    }
+}
