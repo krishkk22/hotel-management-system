@@ -1,0 +1,184 @@
+import java.util.*;
+
+class DiningTable {
+    int tableID;
+    boolean isReserved;
+
+    public DiningTable(int tableID) {
+        this.tableID = tableID;
+        this.isReserved = false;
+    }
+}
+
+class ReservationRecord {
+    int reservationCode;
+    int tableID;
+
+    public ReservationRecord(int reservationCode, int tableID) {
+        this.reservationCode = reservationCode;
+        this.tableID = tableID;
+    }
+}
+
+class FoodMenu {
+    Map<String, Double> dishes;
+
+    public FoodMenu() {
+        dishes = new HashMap<>();
+        dishes.put("Butter_Chicken", 20.99);
+        dishes.put("Dal_Makhani", 15.99);
+        dishes.put("Jeera_Rice", 16.99);
+        dishes.put("Naan", 4.99);
+        dishes.put("Ice_Cream", 7.99);
+
+        // Add more items as necessary
+    }
+
+    public void printMenu() {
+        System.out.println("Menu:");
+        for (String dish : dishes.keySet()) {
+            System.out.println(dish + " - $" + dishes.get(dish));
+        }
+    }
+}
+
+class CustomerOrder {
+    int orderCode;
+    int tableID;
+    List<String> items;
+
+    public CustomerOrder(int orderCode, int tableID, List<String> items) {
+        this.orderCode = orderCode;
+        this.tableID = tableID;
+        this.items = items;
+    }
+}
+
+class KitchenChef {
+    public void prepareOrder(CustomerOrder order) {
+        System.out.println("Chef is preparing the order for Table " + order.tableID);
+    }
+}
+
+class ServiceStaff {
+    public void takeOrder(ReservationRecord reservation, FoodMenu menu) {
+        int orderCode = reservation.reservationCode;
+        CustomerOrder order = new CustomerOrder(orderCode, reservation.tableID, getOrderItems(menu));
+        System.out.println("Service staff takes order for Table " + order.tableID);
+
+        deliverOrderToKitchen(order);
+    }
+
+    private void deliverOrderToKitchen(CustomerOrder order) {
+        KitchenChef chef = new KitchenChef();
+        chef.prepareOrder(order);
+    }
+
+    private List<String> getOrderItems(FoodMenu menu) {
+        Scanner scanner = new Scanner(System.in);
+        List<String> orderedItems = new ArrayList<>();
+
+        menu.printMenu(); // Print the menu only once
+
+        while (true) {
+            System.out.print("Enter item to order (or 'done' to finish): ");
+            String input = scanner.nextLine().trim();
+
+            if (input.equalsIgnoreCase("done")) {
+                break;
+            }
+
+            if (menu.dishes.containsKey(input)) {
+                orderedItems.add(input);
+            } else {
+                System.out.println("Invalid item. Please choose from the menu.");
+            }
+        }
+
+        return orderedItems;
+    }
+}
+
+class Client {
+    public void receiveReceipt(BillingReceipt receipt) {
+        System.out.println("Customer at Table " + receipt.tableID + " receives the receipt. Total amount: $" + receipt.totalAmount);
+    }
+}
+
+class BillingReceipt {
+    int receiptCode;
+    int tableID;
+    double totalAmount;
+
+    public BillingReceipt(int receiptCode, int tableID, double totalAmount) {
+        this.receiptCode = receiptCode;
+        this.tableID = tableID;
+        this.totalAmount = totalAmount;
+    }
+}
+
+class RestaurantSystem {
+    public static void main(String[] args) {
+        DiningTable diningTable = reserveTable();
+        ReservationRecord reservationRecord = new ReservationRecord(1, diningTable.tableID);
+
+        ServiceStaff staff = new ServiceStaff();
+        staff.takeOrder(reservationRecord, new FoodMenu());
+
+        // Simulate the passage of time for order preparation
+
+        Client client = new Client();
+        BillingReceipt receipt = generateReceipt(reservationRecord);
+        client.receiveReceipt(receipt);
+    }
+
+    private static DiningTable reserveTable() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter table ID: ");
+        int tableID = scanner.nextInt();
+
+        return new DiningTable(tableID);
+    }
+
+    private static BillingReceipt generateReceipt(ReservationRecord reservationRecord) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Generating receipt for Table " + reservationRecord.tableID);
+
+        FoodMenu menu = new FoodMenu();
+        List<String> orderedItems = getOrderItems(menu);
+
+        double totalAmount = calculateTotalAmount(orderedItems, menu);
+        return new BillingReceipt(reservationRecord.reservationCode, reservationRecord.tableID, totalAmount);
+    }
+
+    private static double calculateTotalAmount(List<String> items, FoodMenu menu) {
+        double totalAmount = 0;
+        for (String item : items) {
+            totalAmount += menu.dishes.getOrDefault(item, 0.0);
+        }
+        return totalAmount;
+    }
+
+    private static List<String> getOrderItems(FoodMenu menu) {
+        Scanner scanner = new Scanner(System.in);
+        List<String> orderedItems = new ArrayList<>();
+
+        while (true) {
+            System.out.print("Enter item ordered (or 'done' to finish): ");
+            String input = scanner.nextLine().trim();
+
+            if (input.equalsIgnoreCase("done")) {
+                break;
+            }
+
+            if (menu.dishes.containsKey(input)) {
+                orderedItems.add(input);
+            } else {
+                System.out.println("Invalid item. Please choose from the menu.");
+            }
+        }
+
+        return orderedItems;
+    }
+}
