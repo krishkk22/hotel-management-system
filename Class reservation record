@@ -1,0 +1,9 @@
+class ReservationRecord {
+    int reservationCode;
+    int tableID;
+
+    public ReservationRecord(int reservationCode, int tableID) {
+        this.reservationCode = reservationCode;
+        this.tableID = tableID;
+    }
+}
